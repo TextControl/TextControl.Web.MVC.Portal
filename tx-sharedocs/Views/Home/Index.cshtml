@@ -1,0 +1,97 @@
+﻿@model List<tx_sharedocs.Models.Document>
+
+@{
+    ViewData["Title"] = "Overview";
+}
+
+<div class="row">
+    <div class="col-12">
+        <h1>Stored Documents</h1>
+        <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" href="#dummyDocumentModal" role="button">Create Dummy Document</button>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-12">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Document Name</th>
+                    <th scope="col">Document ID</th>
+                    <th scope="col">Created</th>
+                    <th scope="col">URL</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(Document doc in Model) {
+                <tr>
+                    <td>@doc.Name</td>
+                    <td>@doc.DocumentId</td>
+                    <td>@doc.Created.ToString("f")</td>
+                    <td>@Html.ActionLink("Open", "View", "Home", new { id = doc.DocumentId })</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="dummyDocumentModal" aria-hidden="true" aria-labelledby="dummyDocumentModalTitle" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="dummyDocumentModalTitle">Create New Dummy Document</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="companyName" class="form-label">Company Name</label>
+                        <input type="text" class="form-control" placeholder="Dummy Company, LLC" id="companyName" aria-describedby="companyNameHelp">
+                        <div id="companyNameHelp" class="form-text">Enter a company name for the dummy document.</div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button onclick="createDummyDocument()" type="button" class="btn btn-primary">Create</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+
+        function createDummyDocument() {
+            var companyName = $("#companyName").val();
+
+            if (companyName == "")
+                companyName = "Dummy Company, LLC";
+
+            var serviceURL = "@Url.Action("CreateDummyDocument", "Document")";
+
+
+            // send document to controller
+            $.ajax({
+                type: "POST",
+                url: serviceURL,
+                data: {
+                    CompanyName: companyName
+                },
+                success: successFunc,
+                error: errorFunc
+            });
+
+            function successFunc(data, status) {
+                location.reload();
+            }
+
+            function errorFunc() {
+                alert("Error");
+            }
+
+        }
+
+    </script>
+}

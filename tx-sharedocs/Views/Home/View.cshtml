@@ -1,0 +1,25 @@
+﻿@using TXTextControl.Web.MVC.DocumentViewer
+
+@model tx_sharedocs.Models.ViewDocument
+
+@{
+    ViewData["Title"] = "View Document";
+}
+
+<div class="row">
+    <div class="col-12">
+        <h1>View Document</h1>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-12">
+        <div style="height: 800px">
+        @Html.TXTextControl().DocumentViewer(settings => {
+            settings.DocumentData = Model.BinaryData;
+            settings.Dock = DocumentViewerSettings.DockStyle.Fill;
+        }).Render()
+        </div>
+    </div>
+</div>
